@@ -1,0 +1,50 @@
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.app-layout {
+  display: flex;
+  align-items: stretch;
+  min-height: calc(100vh - 60px);
+}
+
+.app-layout .slide-bar {
+  flex: 0 0 250px;
+  width: 250px;
+  min-height: calc(100vh - 60px);
+}
+
+.app-layout .dashboard {
+  flex: 1;
+  min-width: 0;
+}
+.navbar-username {
+  font-weight: 600;
+  color: #263b59;
+  text-transform: capitalize;
+}
+
+.navbar-logout {
+  background: #498AFA;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.navbar-logout:hover {
+  background: #3478e5;
+}

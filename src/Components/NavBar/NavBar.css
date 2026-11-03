@@ -1,0 +1,94 @@
+
+.nav-bar {
+  width: 100%;
+}
+
+.nav-bar ul {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  padding: 10px 20px;
+  margin: 0;
+  background-color: #36648B;
+  color: white;
+  box-sizing: border-box;
+}
+
+.nav-bar li {
+  list-style: none;
+}
+
+/* Logo and search area */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+/* Logo */
+.nav-bar .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-bar .logo a {
+  color: white;
+  text-decoration: none;
+  font-size: 20px;
+  white-space: nowrap;
+}
+
+.nav-bar .logo img {
+  width: 40px;
+  height: 40px;
+  border-radius: 45%;
+  object-fit: contain;
+}
+
+/* Search box */
+.nav-bar .search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.nav-bar .search-box input {
+  width: 280px;
+  height: 42px;
+  padding: 8px 12px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  box-sizing: border-box;
+  outline: none;
+}
+
+/* Search icon */
+.nav-bar .search-icon {
+  font-size: 34px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* User and chat button */
+.nav-bar .user-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-bar .user-area button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  font-size: 22px;
+  color: #36648B;
+  background-color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}

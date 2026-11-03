@@ -1,0 +1,23 @@
+
+.slide-bar {
+  width: 250px;
+  background-color: #36648B;
+  color: white;
+  min-height: 100vh;
+  margin-top: 0px;
+  padding-top: 0px;
+   box-sizing: border-box;
+}
+
+.slide-bar ul {
+  list-style: none;
+  margin-top: 0px;
+}
+
+.slide-bar li {
+  padding: 12px;
+  cursor: pointer;
+  border-width: 1.5px 0px 1.5px 0px;
+  margin-top: 0px;
+  border-style: solid;
+}
