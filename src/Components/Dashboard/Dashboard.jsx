@@ -43,74 +43,106 @@ function Dashboard() {
   ];
 
   // Load progress belonging only to the logged-in user.
-  useEffect(() => {
-    let mounted = true;
+  
+useEffect(() => {
+  let mounted = true;
 
-    const loadCourseProgress = async () => {
-      setLoadingProgress(true);
+  const loadCourseProgress = async () => {
+    try {
+      const [allVideos, completedVideos] = await Promise.all([
+        getTrainingVideos(),
+        getCompletedVideos(username),
+      ]);
 
-      try {
-        const [allVideos, completedVideos] = await Promise.all([
-          getTrainingVideos(),
-          getCompletedVideos(username),
-        ]);
+      const progressData = {};
 
-        const progressData = {};
+      courses.forEach((course) => {
+        const courseVideos = allVideos.filter(
+          (video) =>
+            video.isPublished &&
+            video.file &&
+            (video.course === course.title ||
+              (!video.course && video.category === course.title))
+        );
 
-        courses.forEach((course) => {
-          // Get published videos belonging to this course.
-          const courseVideos = allVideos.filter(
-            (video) =>
-              video.isPublished &&
-              video.file &&
-              (video.course === course.title ||
-                (!video.course && video.category === course.title))
-          );
+        const completedIds = new Set(
+          completedVideos
+            .filter((item) => item.course === course.title)
+            .map((item) => item.videoId)
+        );
 
-          // Get completion IDs for this logged-in user.
-          const completedIds = new Set(
-            completedVideos
-              .filter((item) => item.course === course.title)
-              .map((item) => item.videoId)
-          );
+        const completedCount = courseVideos.filter(
+          (video) => completedIds.has(video.id)
+        ).length;
 
-          // Count completed videos.
-          const completedCount = courseVideos.filter(
-            (video) => completedIds.has(video.id)
-          ).length;
+        const totalCount = courseVideos.length;
 
-          const totalCount = courseVideos.length;
+        const percentage =
+          totalCount > 0
+            ? Math.round((completedCount / totalCount) * 100)
+            : 0;
 
-          const percentage =
-            totalCount > 0
-              ? Math.round((completedCount / totalCount) * 100)
-              : 0;
+        progressData[course.title] = {
+          percentage,
+          completedCount,
+          totalCount,
+        };
+      });
 
-          progressData[course.title] = {
-            percentage,
-            completedCount,
-            totalCount,
-          };
-        });
-
-        if (mounted) {
-          setCourseProgress(progressData);
-        }
-      } catch (error) {
-        console.error("Unable to load course progress:", error);
-      } finally {
-        if (mounted) {
-          setLoadingProgress(false);
-        }
+      if (mounted) {
+        setCourseProgress(progressData);
       }
-    };
+    } catch (error) {
+      console.error("Unable to load course progress:", error);
+    } finally {
+      if (mounted) {
+        setLoadingProgress(false);
+      }
+    }
+  };
 
-    loadCourseProgress();
+  // Load progress when dashboard opens.
+  loadCourseProgress();
 
-    return () => {
-      mounted = false;
-    };
-  }, [username]);
+  // Listen for video completion events.
+  const handleProgressUpdate = (event) => {
+    if (event.detail?.username === username) {
+      loadCourseProgress();
+    }
+  };
+
+  window.addEventListener(
+    "trainingProgressUpdated",
+    handleProgressUpdate
+  );
+
+  // Refresh progress when returning to the browser tab.
+  const handleVisibilityChange = () => {
+    if (document.visibilityState === "visible") {
+      loadCourseProgress();
+    }
+  };
+
+  document.addEventListener(
+    "visibilitychange",
+    handleVisibilityChange
+  );
+
+  return () => {
+    mounted = false;
+
+    window.removeEventListener(
+      "trainingProgressUpdated",
+      handleProgressUpdate
+    );
+
+    document.removeEventListener(
+      "visibilitychange",
+      handleVisibilityChange
+    );
+  };
+}, [username]);
+
 
   const upcoming = [
     {

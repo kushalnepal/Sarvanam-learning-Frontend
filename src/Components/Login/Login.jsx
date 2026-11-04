@@ -1,11 +1,7 @@
 
 import { useState } from "react";
+import { authenticateUser } from "../../Utils/userStorage";
 import "./Login.css";
-
-const USERS = [
-  { username: "ramesh", password: "12345" },
-  { username: "suresh", password: "12345" },
-];
 
 function Login({ onLogin }) {
   const [username, setUsername] = useState("");
@@ -15,25 +11,19 @@ function Login({ onLogin }) {
   const handleLogin = (e) => {
     e.preventDefault();
 
-    const user = USERS.find(
-      (u) =>
-        u.username === username.trim().toLowerCase() &&
-        u.password === password
-    );
+    const user = authenticateUser(username, password);
 
     if (user) {
       setError("");
-      onLogin(user.username);
+      onLogin(user);
     } else {
-      setError("Invalid username or password.");
+      setError("Invalid username or password, or account is inactive.");
     }
   };
 
   return (
     <div className="login-container">
       <div className="login-wrapper">
-
-        {/* Left Side - Sarvanam Support */}
         <div className="login-left">
           <img
             src="/sarvanamlogo.png"
@@ -54,10 +44,10 @@ function Login({ onLogin }) {
           </div>
         </div>
 
-        {/* Right Side - Login Form */}
         <div className="login-right">
           <form className="login-card" onSubmit={handleLogin}>
             <h1>Welcome Back</h1>
+
             <p className="login-subtitle">
               Sign in to access Sarvanam Learning
             </p>
@@ -91,7 +81,6 @@ function Login({ onLogin }) {
             </button>
           </form>
         </div>
-
       </div>
     </div>
   );

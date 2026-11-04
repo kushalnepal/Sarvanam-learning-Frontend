@@ -170,6 +170,7 @@ export async function getCompletedVideos(
 }
 
 // Mark a video as completed for the logged-in user
+
 export async function markVideoCompleted(
   video,
   username = getCurrentUsername()
@@ -183,7 +184,6 @@ export async function markVideoCompleted(
     );
 
     const store = transaction.objectStore(USER_COMPLETED_STORE);
-
     const request = store.get([username, video.id]);
 
     let completionRecord;
@@ -208,6 +208,17 @@ export async function markVideoCompleted(
 
     transaction.oncomplete = () => {
       db.close();
+
+      // Notify the dashboard that progress has changed.
+      window.dispatchEvent(
+        new CustomEvent("trainingProgressUpdated", {
+          detail: {
+            username,
+            videoId: video.id,
+          },
+        })
+      );
+
       resolve(completionRecord);
     };
 
@@ -217,6 +228,7 @@ export async function markVideoCompleted(
     };
   });
 }
+
 
 // Check completion for a specific user
 export async function isVideoCompleted(
